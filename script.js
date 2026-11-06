@@ -10,5 +10,7 @@ weddingAudio.addEventListener('play',updateMusicButton);
 weddingAudio.addEventListener('pause',updateMusicButton);
 weddingAudio.addEventListener('ended',updateMusicButton);
 document.querySelectorAll('video').forEach(v=>v.addEventListener('play',()=>weddingAudio.pause()));
+async function tryAutoplay(){try{await weddingAudio.play()}catch{const resumeOnInteraction=e=>{if(e.target===musicToggle||musicToggle.contains(e.target))return;weddingAudio.play().then(()=>{document.removeEventListener('pointerdown',resumeOnInteraction,true);document.removeEventListener('keydown',resumeOnInteraction,true)}).catch(()=>{})};document.addEventListener('pointerdown',resumeOnInteraction,true);document.addEventListener('keydown',resumeOnInteraction,true)}}
+tryAutoplay();
 const motion=matchMedia('(prefers-reduced-motion: reduce)');
 if('IntersectionObserver' in window&&!motion.matches){const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.06});document.querySelectorAll('.intro h2,.intro p,.story-grid>div,.section-head,.proposal-grid>article,.event-grid,.event-info>div,.gallery>button,.films>div,.gift h2,.gift p,.rsvp-wrap>div').forEach((e,i)=>{e.classList.add('reveal');e.style.setProperty('--delay',Math.min(i%4*65,195)+'ms');observer.observe(e)});document.body.classList.add('motion-ready')}
