@@ -15,9 +15,9 @@ const memoryPhotos = [
     },
     {
         src: 'assets/photo-01.png',
-        titleEn: '',
+        titleEn: 'A kiss, a clink & a favorite day',
         titleVi: 'Dạo bước bảo tàng',
-        captionEn: '',
+        captionEn: 'A kiss, a clink & a favorite day',
         captionVi: 'Dạo bước buổi chiều tại bảo tàng nghệ thuật.'
     },
     {
