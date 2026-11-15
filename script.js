@@ -14,10 +14,10 @@ const memoryPhotos = [
         captionVi: 'Khoảng sân ngập nắng & dịu dàng mỗi ngày.'
     },
     {
-        src: 'assets/photo-01.jpg',
-        titleEn: 'Museum Strolls',
+        src: 'assets/photo-01.png',
+        titleEn: '',
         titleVi: 'Dạo bước bảo tàng',
-        captionEn: 'Afternoon strolls & art museum dates.',
+        captionEn: '',
         captionVi: 'Dạo bước buổi chiều tại bảo tàng nghệ thuật.'
     },
     {
@@ -107,19 +107,37 @@ function download(content, name, type) {
     setTimeout(() => URL.revokeObjectURL(u), 2000);
 }
 
+const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbytdnahePbktrYlGIftAxxen5tc6b6jMt3KydqbHn2PS_XVuHHL1sII6YE5cnUPv8UB/exec';
 const form = document.querySelector('form');
-form.addEventListener('submit', e => {
+form.addEventListener('submit', async e => {
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(form));
-    download(
-        'RSVP — Monique & Rhonda\n\n' + Object.entries(data).map(([k, v]) => k + ': ' + v).join('\n'),
-        'RSVP-Monique-Rhonda.txt',
-        'text/plain;charset=utf-8'
-    );
-    document.querySelector('.status').textContent = t(
-        'Your response file is ready. It has not been sent. Please share the downloaded file with Monique and Rhonda directly.',
-        'Tệp phản hồi đã sẵn sàng, chưa được gửi. Vui lòng gửi tệp vừa tải trực tiếp cho Monique và Rhonda.'
-    );
+    const status = document.querySelector('.status');
+    if (!GOOGLE_SHEETS_WEB_APP_URL) {
+        status.textContent = t(
+            'Google Sheets is not connected yet. Deploy the Apps Script and add its Web App URL to script.js.',
+            'Google Sheets chưa được kết nối. Hãy triển khai Apps Script rồi thêm URL Web App vào script.js.'
+        );
+        return;
+    }
+    const submitButton = form.querySelector('[type="submit"]');
+    submitButton.disabled = true;
+    status.textContent = t('Sending your RSVP…', 'Đang gửi phản hồi…');
+    try {
+        const body = new URLSearchParams();
+        new FormData(form).forEach((value, key) => body.append(key, String(value)));
+        await fetch(GOOGLE_SHEETS_WEB_APP_URL, { method: 'POST', mode: 'no-cors', body });
+        status.textContent = t(
+            'RSVP request sent to Google. Check the “RSVP Responses” tab to confirm it was saved. If it is missing, keep this form open and check the Apps Script deployment.',
+            'Đã gửi yêu cầu RSVP tới Google. Hãy kiểm tra tab “RSVP Responses” để xác nhận dữ liệu đã được lưu. Nếu chưa thấy, giữ nguyên biểu mẫu và kiểm tra bản triển khai Apps Script.'
+        );
+    } catch {
+        status.textContent = t(
+            'Could not send your RSVP. Please try again.',
+            'Không gửi được phản hồi. Vui lòng thử lại.'
+        );
+    } finally {
+        submitButton.disabled = false;
+    }
 });
 
 function t(en, vi) { return en; }
