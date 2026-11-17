@@ -107,7 +107,7 @@ function download(content, name, type) {
     setTimeout(() => URL.revokeObjectURL(u), 2000);
 }
 
-const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbytdnahePbktrYlGIftAxxen5tc6b6jMt3KydqbHn2PS_XVuHHL1sII6YE5cnUPv8UB/exec';
+const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxwjY9EklcrXlDrsdHO7XhwYz9vXdcvEGpOgx4-RULJQLvbVy7zs6BSiaVoH1M3GPDk/exec';
 const form = document.querySelector('form');
 form.addEventListener('submit', async e => {
     e.preventDefault();
